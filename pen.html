@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>pen</title>
+</head>
+<body>
+
+<canvas id="play" height="500" width="800">
+
+<style>
+	body { margin: 0; padding: 0; background: #666; }
+</style>
+
+<script src="pen.js"></script>
+
+<script>
+// create a new pen object attached to our canvas tag
+var p = new Pen("play");
+
+// add a function to draw a square
+p.square = function(size) {
+	for (var i = 0; i < 4; i++)
+		this.go(size).turn(90);
+
+	// to be a good function, we want to allow chaining
+	return this;
+}
+
+// add "spirograph" function based on our new square function
+p.spiro = function() {
+	for (var i = 0; i < 36; i++)
+		this.square(50).turn(10);
+		
+	return this;
+}
+
+// an arrow, for grins
+p.arrow = function() {
+	return this.pendown().turn(-150).go(20).back(20).turn(300).go(20).back(20).turn(-150).close().stroke();
+}
+
+
+// stupid canvas tricks
+//p.canvas.scale(5, 5);
+//p.canvas.translate(-600, -250);
+
+// make single pixel lines look prettier -- don't ask
+p.canvas.translate(.5, .5);
+
+// draw a container box
+p.pensize(3).fillstyle("#eee").jump(10, 10).right(780).down(480).left(780).up(480).close().draw();
+
+// yes, you could go directly to the canvas if you wanna, but it won't chain
+// p.fillstyle("#eee").canvas.fillRect(10, 10, 790, 490);
+
+// draw a square
+p.pensize(1).fillstyle("#ff0").jump(50, 300).square(100).draw();
+
+// draw a spirograph
+p.fillstyle().jump(300, 250).spiro().draw();
+
+// make a complex drawing using our functions
+p.jump(600, 250);
+for (var i = 0; i < 18; i++) {
+	// pen color change for a little pazazz
+	p.penhsv(p.angle, 1, .9);
+
+	// draw a spiro, then rotate a bit
+	p.penup().go(100).pendown().spiro().penup().back(100).turn(20).draw();
+}
+
+// draw some labels
+p.fillstyle("#999").font("bold 15px Helvetica").penup();
+p.jump(70, 150).text("square()");
+p.jump(275, 150).text("spiro()");
+p.jump(540, 50).text("Complex Drawing");
+
+</script>
+
+
+</body>
+</html>
