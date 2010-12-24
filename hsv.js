@@ -2,7 +2,7 @@ hsvtorgb = function(h, s, v) {
 	if (s == 0)
 		return format(v, v, v);
 
-	h /= 60;
+	h = ((h + 360) % 360) / 60;
 
 	var i = Math.floor(h);
 	var f = h - i;
