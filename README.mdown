@@ -8,14 +8,15 @@ This lib is not a Logo interpreter (there are plenty of those), but a fairly unf
 Features
 --------
 
-- Supports method chaining for those of us who like a little sloppy code (a'la jQuery)
-- Basic turtle-oriented graphics
+- Turtle-oriented graphics
+- Cartesian and polar coordinate graphics (working in harmony with turtle stuff)
 - Wrapper calls for basic canvas styles
+- Method chaining for those of us who like a little sloppy code (a'la jQuery)
 
 Supported Platforms
 -------------------
 
-- Safari, Chrome (and other webkit flavors with canvas support)
+- Safari, Chrome, Mozilla and other engines which support the `canvas` tag
 
 Sample
 ------
@@ -29,18 +30,23 @@ Sample
 	// draw a tiny square
 	p.jump(10, 30).right(10).down(10).left(10).up(10).draw();
 		
-	// make a hexigon
+	// make a yellow hexigon with a thicker line
 	p.jump(100, 100).fillstyle("#ff0").pensize(2);
 	for (var i = 0; i < 6; i++)
 		p.go(50).turn(60);
 		
 	p.draw();
 
-Files
------
+Important Files
+---------------
 
 - `pen.js` is the lib
 - `pen.html` is a more interesting sample than in this README
+
+Performance
+-----------
+
+Zippy. Using the `pen.html`	demo, which is fairly complex, runs in ~75ms on Chrome and ~310ms on Safari (includes loading script and HTML from cache). This is on a 2nd gen Macbook Air; your mileage may vary.
 
 Roadmap
 -------
@@ -48,5 +54,5 @@ Roadmap
 1. More canvas wrapper methods (makes chaining easier)
 2. Probably tweaking the method names and functionality (you've been warned)
 3. Robust kitchen sink test script
-4. Support beyond webkit (Mozilla, Opera, IE, in that order)
-5. Polar coordinate system option (maybe) which renders arcs between angle changes (maybe)
+4. Support for rendering in SVG and IE's madness (maybe)
+5. Auto-render arcs between points in `polar()` calls (maybe)
