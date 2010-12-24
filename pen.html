@@ -62,8 +62,30 @@
 	// make single pixel lines look prettier -- don't ask
 	p.canvas.translate(.5, .5);
 
+	p.jump(300, 250).fillstyle("#ff0").pensize(0);
+	p.ray = function(d, a) {
+		this.begin();
+		return this.origin().polar(d, 0).polar(d, a).polar(0, 0).close().draw();
+	}
+	for (var i = 0; i < 18; i++) {
+		// pen color change for a little pazazz
+		p.fillstyle(hsvtorgb(p.angle + 60, 1, .9));
+
+		p.ray(1000, 10).turn(20);
+	}
+
+	p.turn(10);
+	for (var i = 0; i < 18; i++) {
+		// pen color change for a little pazazz
+		p.fillstyle(hsvtorgb(p.angle - 60, 1, .9));
+
+		p.ray(1000, 10).turn(20);
+	}
+	p.turn(-10);
+	
 	// draw a container box
-	p.pensize(3).fillstyle("#eee").jump(10, 10).right(780).down(480).left(780).up(480).close().draw();
+	p.pensize(3).fillstyle("rgba(255, 255, 255, .8)");
+	p.jump(10, 10).right(780).down(480).left(780).up(480).close().draw();
 
 	// yes, you could go directly to the canvas if you wanna, but it won't chain
 	// p.fillstyle("#eee").canvas.fillRect(10, 10, 790, 490);
@@ -78,7 +100,7 @@
 	p.jump(600, 250);
 	for (var i = 0; i < 18; i++) {
 		// pen color change for a little pazazz
-		p.penhsv(p.angle, 1, .9);
+		p.penstyle(hsvtorgb(p.angle, 1, .9));
 
 		// draw a spiro, then rotate a bit
 		p.penup().go(100).pendown().spiro().penup().back(100).turn(20).draw();
