@@ -72,11 +72,6 @@
 	  A canvas passthru to set the line style of your pen. For example: `penstyle("#00f")`
 	  will turn your pen blue.
 	
-	- `penhsv(hue, saturation, value)`
-	
-	  If you use "photoshop" you know what this is. The `hue` is expressed in degrees
-	  (0-360), and the `saturation` and `value` are decimals ranging from 0 to 1.
-	
 	- `fillstyle(string)`
 	
 	  A canvas wrapper, usually this is a solid color, e.g. `fillstyle("#ff0")` will
@@ -91,6 +86,21 @@
 	
 	  Draws, well, text... at the current position. Currently does not support current
 	  angle, but it should in the future.
+	
+	- `origin()`
+	
+	  Sets current location as the origin point for `polar()` moves.
+	
+	- `polar(distance, angle)`
+	
+	  Performs a `goto` using polar coordinates which are relative to the last origin set.
+	  This is an interesting addition to typical turtle features, and can be a huge time
+	  (math) saver.
+	
+	- `set()` and `home()`
+	
+	  Stores current position, angle and origin. A call to `home()` performs a move
+	  to this position. Limited use convenience; it doesn't quite work yet and may go away.
 
 */
 
@@ -106,6 +116,9 @@ Pen = function(tag) {
 	this.lineWidth = this.canvas.lineWidth = 1;
 	this.fillStyle = this.canvas.fillStyle = "";
 
+	this.ox = 0;
+	this.oy = 0;
+	
 	this.pen = true;
 	
 	this.canvas.beginPath();
@@ -124,6 +137,18 @@ Pen.prototype = {
 		return this;
 	},
 	
+	set: function() {
+		this.homes.push({ x: this.x, y: this.y, angle: this.angle });
+		return this;
+	},
+	
+	home: function() {
+		var last = this.homes.pop();
+		this.angle = last.angle;
+
+		return this.goto(this.x, this.y);
+	},
+		
 	go: function(r) {
 		var a = this.toRad(this.angle);
 
@@ -230,6 +255,27 @@ Pen.prototype = {
 		return this.goto(this.x + r, this.y);
 	},
 	
+	polar: function(r, angle) {
+		var a = this.toRad(angle + this.angle);
+		
+		this.x = this.ox + r * Math.cos(a);
+		this.y = this.oy + r * Math.sin(a);
+
+		if (this.pen)
+			this.canvas.lineTo(this.x, this.y);
+		else
+			this.canvas.moveTo(this.x, this.y);
+
+		return this;
+	},
+	
+	origin: function() {
+		this.ox = this.x;
+		this.oy = this.y;
+		
+		return this;
+	},
+	
 	rad: Math.PI / 180.0,
 	
 	toRad: function(d) {
@@ -239,13 +285,6 @@ Pen.prototype = {
 	pensize: function(size) {
 		this.lineWidth = this.canvas.lineWidth = size;
 
-		return this;
-	},
-	
-	penhsv: function(h, s, v) {
-		if (typeof hsvtorgb !== "undefined")
-			this.penstyle(hsvtorgb(h, s, v));
-		
 		return this;
 	},
 	
