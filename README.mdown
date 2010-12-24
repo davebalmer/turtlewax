@@ -16,7 +16,7 @@ Features
 Supported Platforms
 -------------------
 
-- Safari, Chrome, Mozilla and other engines which support the `canvas` tag
+- Safari, Chrome, Mozilla, Opera and other engines which support the `canvas` tag
 
 Sample
 ------
