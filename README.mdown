@@ -54,5 +54,7 @@ Roadmap
 1. More canvas wrapper methods (makes chaining easier)
 2. Probably tweaking the method names and functionality (you've been warned)
 3. Robust kitchen sink test script
-4. Support for rendering in SVG and IE's madness (maybe)
-5. Auto-render arcs between points in `polar()` calls (maybe)
+4. Optimize the code a bit more
+5. Support rendering in SVG and IE's madness (maybe)
+6. Auto-render arcs between points in `polar()` calls (maybe)
+
