@@ -101,11 +101,15 @@
 	
 	  Stores current position, angle and origin. A call to `home()` performs a move
 	  to this position. Limited use convenience; it doesn't quite work yet and may go away.
+	
+	- `angle(direction)`
+	
+	  Resets the pen's current direction relative to the page (0 degrees is "up").
 
 */
 
 Pen = function(tag) {
-	this.angle = -90;
+	this._angle = -90;
 	this.x = 0;
 	this.y = 0;
 	
@@ -125,8 +129,8 @@ Pen = function(tag) {
 };
 Pen.prototype = {
 	turn: function(deg) {
-		this.angle += deg;
-		this.angle = this.angle % 360;
+		this._angle += deg;
+		this._angle = this._angle % 360;
 		
 		return this;
 	},
@@ -138,19 +142,24 @@ Pen.prototype = {
 	},
 	
 	set: function() {
-		this.homes.push({ x: this.x, y: this.y, angle: this.angle });
+		this.homes.push({ x: this.x, y: this.y, angle: this._angle });
+		return this;
+	},
+	
+	angle: function(a) {
+		this._angle = a - 90;
 		return this;
 	},
 	
 	home: function() {
 		var last = this.homes.pop();
-		this.angle = last.angle;
+		this._angle = last.angle;
 
 		return this.goto(this.x, this.y);
 	},
 		
 	go: function(r) {
-		var a = this.toRad(this.angle);
+		var a = this.toRad(this._angle);
 
 		this.x += r * Math.cos(a);
 		this.y += r * Math.sin(a);
@@ -256,7 +265,7 @@ Pen.prototype = {
 	},
 	
 	polar: function(r, angle) {
-		var a = this.toRad(angle + this.angle);
+		var a = this.toRad(angle + this._angle);
 		
 		this.x = this.ox + r * Math.cos(a);
 		this.y = this.oy + r * Math.sin(a);
