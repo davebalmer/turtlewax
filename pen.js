@@ -1,3 +1,99 @@
+/**
+	Pen
+	===
+	
+	Canvas implementation of turtle graphics found in Logo, at least in spirit, and
+	reimagined for a JavaScript world.
+
+	Conventions
+	-----------
+	
+	- coordinate and distance units are expressed in pixels
+	- angles are expressed in degrees (mecause most humans don't grok radians)
+	
+	Methods
+	-------
+
+	- `begin()`
+	
+	  Starts a new path in canvas, and looks more Logo-ish along the way.
+	
+	- `go(distance)`
+	
+	  Moves forward in the current direction by `distance` pixels.
+	
+	- `back(distance)`
+	
+	  The opposite of `go`.
+	
+	- `turn(angle)`
+	
+	  Turns your current direction. To turn left (counter-clockwise), use negative
+	  numbers. To turn right, well, do the opposite.
+
+	- `penup()` and `pendown()`
+	
+	  Sets the pen down (turns on drawing) or picks it up (turns off drawing).
+	
+	- `up(distance)`, `down(distance)`, `left(distance)` and `right(distance)`
+	
+	  Makes a relative move using the coordinate system. These are convenience methods.
+	
+	- `goto(x, y)`
+	
+	  Moves the pen to the specified coordinates, respecting pen state (up or down).
+	
+	- `jump(x, y)`
+	
+	  Like `goto` except it will never draw a line to the specified point, and it
+	  also quietly calls `begin`.
+
+	- `draw()`
+
+	  Convenience method which calls `fill()` and `stroke()`, in that order, but only
+	  calls each if there is a fill style and stroke style defined, respectively.
+
+	- `close()`
+
+	  If you're making a closed shape and you want the corners to match up, put this
+	  after you're done drawing your shape but before you call `draw()`.
+
+	- `stroke()` and `fill()`
+	
+	  Canvas wrappers which let you manually specify which of these operations you want
+	  to perform on your path (everything since the last `begin` or `jump` call).
+	
+	- `pensize(width)`
+	
+	  Sets the thickness of the line your pen draws with.
+	
+	- `penstyle(string)`
+	
+	  A canvas passthru to set the line style of your pen. For example: `penstyle("#00f")`
+	  will turn your pen blue.
+	
+	- `penhsv(hue, saturation, value)`
+	
+	  If you use "photoshop" you know what this is. The `hue` is expressed in degrees
+	  (0-360), and the `saturation` and `value` are decimals ranging from 0 to 1.
+	
+	- `fillstyle(string)`
+	
+	  A canvas wrapper, usually this is a solid color, e.g. `fillstyle("#ff0")` will
+	  fill your shapes with eye-blinding yellow.
+	
+	- `font(string)`
+	
+	  Pass in a typical CSS font spec, e.g. `font("bold 15px Helvetica")`. The color
+	  of your font will depend on your last `fillstyle` (defaults to black).
+	
+	- `text(string)`
+	
+	  Draws, well, text... at the current position. Currently does not support current
+	  angle, but it should in the future.
+
+*/
+
 Pen = function(tag) {
 	this.angle = -90;
 	this.x = 0;
@@ -114,19 +210,10 @@ Pen.prototype = {
 		this.pen = true;
 		this.goto(x, y);
 		this.pen = p;
-		return this;
-	},
-
-	moveby: function(a, r) {
-		var last = this.angle;
-
-		this.angle = a;
-		this.go(r);
-		this.angle = last;
 
 		return this;
 	},
-		
+
 	up: function(r) {
 		return this.goto(this.x, this.y - r);
 	},
@@ -149,18 +236,21 @@ Pen.prototype = {
 		return d * this.rad;
 	},
 	
-	repeat: function(call, count) {
-		for (var i = 0; i < count; i++)
-			call.call(this);
-	},
-	
 	pensize: function(size) {
 		this.lineWidth = this.canvas.lineWidth = size;
+
 		return this;
 	},
 	
 	penhsv: function(h, s, v) {
-		this.canvas.strokeStyle = this.strokeStyle = hsvtorgb(h, s, v);
+		if (typeof hsvtorgb !== "undefined")
+			this.penstyle(hsvtorgb(h, s, v));
+		
+		return this;
+	},
+	
+	penstyle: function(str) {
+		this.canvas.strokeStyle = this.strokeStyle = str;
 		
 		return this;
 	},
@@ -173,50 +263,7 @@ Pen.prototype = {
 	
 	font: function(str) {
 		this.canvas.font = str;
+
 		return this;
 	}
-};
-
-hsvtorgb = function(h, s, v) {
-	if (s == 0)
-		return format(v, v, v);
-
-	h /= 60;
-
-	var i = Math.floor(h);
-	var f = h - i;
-	var p = v * (1 - s);
-	var q = v * (1 - s * f);
-	var t = v * (1 - s * (1 - f));
-
-	function format(r, g, b) {
-		return "rgb(" + Math.round(r * 255) + "," + Math.round(g * 255) + "," + Math.round(b * 255) + ")";
-	}
-
-	switch(i) {
-	case 0:
-		r = v; g = t; b = p;
-		break;
-
-	case 1:
-		r = q; g = v; b = p;
-		break;
-
-	case 2:
-		r = p; g = v; b = t;
-		break;
-
-	case 3:
-		r = p; g = q; b = v;
-		break;
-
-	case 4:
-		r = t; g = p; b = v;
-		break;
-
-	default:
-		r = v; g = p; b = q;
-	}
-
-	return format(r, g, b);
 };
