@@ -1,0 +1,52 @@
+Turtle Wax
+==========
+
+*Logo-style turtle graphics for JavaScript.*
+
+This lib is not a Logo interpreter (there are plenty of those), but a fairly unfaithful translation of turtle graphics into the world of HTML5 canvas drawing. Since we're not waiting on a little turtle to move around the screen, rendering is actually quite fast (especially in Chrome).
+
+Features
+--------
+
+- Supports method chaining for those of us who like a little sloppy code (a'la jQuery)
+- Basic turtle-oriented graphics
+- Wrapper calls for basic canvas styles
+
+Supported Platforms
+-------------------
+
+- Safari, Chrome (and other webkit flavors with canvas support)
+
+Sample
+------
+
+	// attach to a canvas tag
+	var p = new Pen("somecanvastag");
+	
+	// say hello
+	p.jump(10, 20).font("bold 15px Helvetica").text("Hello World!");
+	
+	// draw a tiny square
+	p.jump(10, 30).right(10).down(10).left(10).up(10).draw();
+		
+	// make a hexigon
+	p.jump(100, 100).fillstyle("#ff0").pensize(2);
+	for (var i = 0; i < 6; i++)
+		p.go(50).turn(60);
+		
+	p.draw();
+
+Files
+-----
+
+- `pen.js` is the lib
+- `pen.html` is a more interesting sample than in this README
+
+Roadmap
+-------
+
+1. More canvas wrapper methods (makes chaining easier)
+2. Probably tweaking the method names and functionality (you've been warned)
+3. Robust kitchen sink test script
+4. Support beyond webkit (Mozilla, Opera, IE, in that order)
+5. Polar coordinate system option (maybe) which renders arcs between angle changes (maybe)
