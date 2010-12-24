@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Turtle Wax -- Logo-ish Turtle Graphis for HTML5 Canvas</title>
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
+	<meta name="format-detection" content="false">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+</head>
+<body>
+
+<p>A demo of an open source project <a href="http://github.com/davebalmer/turtlewax">hosted on GitHub</a> by Dave Balmer</p>
+<canvas id="mycanvas" height="600" width="800">
+
+<style>
+	body { margin: 0; padding: 0; background: #fff; color: #000; font: 15px Helvetica; }
+	p { margin-left: 10px; }
+	a { color: #006; }
+</style>
+
+<!-- including the lib and an rgb to hsv color util function -->
+<script src="pen.js"></script>
+
+<script>
+	// create a new pen object attached to our canvas tag
+	var p = new Pen("mycanvas");
+	
+	// makes our 1 pixel lines look crisper (it's a math thing)
+	p.canvas.translate(.5, .5);
+
+	// display our title
+	p.jump(450, 30).fillstyle("#000").font("bold 15px Helvetica");
+	p.text("Fractal trees, translated from a Logo example").draw().fillstyle();
+
+	// our recursive function which does all the drawing
+	p.trunk = function(trunk, level) {
+		if (!level)
+			return;
+
+		// save a calculation
+		var t = trunk * .75;
+
+		// this is the business end of the fractal
+		this.go(trunk).turn(30);
+		this.trunk(t, level - 1);
+		this.turn(-60).trunk(t, level - 1);
+		this.turn(30).penup().back(trunk).pendown();
+		
+		return this;
+	}
+	
+	// draw a little tree
+	p.pensize(.5).penstyle("#000");
+	p.jump(130, 550).trunk(60, 8).draw();
+
+	// draw a more detailed tree, with a canvas scaled up
+	p.canvas.scale(1.5, 1.5);
+	p.pensize(.25);
+	p.angle(0).jump(160, 230).trunk(60, 13).draw();
+
+	// draw an epic tree, again scaling up the canvas
+	p.canvas.scale(2, 2);
+	p.pensize(.125);
+	p.angle(0).jump(260, 250).trunk(60, 18).draw();
+</script>
+</body>
+</html>
