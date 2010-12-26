@@ -73,7 +73,7 @@
 	}
 	for (var i = 0; i < 18; i++) {
 		// pen color change for a little pazazz
-		p.fillstyle(hsvtorgb(p._angle + 60, 1, .9));
+		p.fillstyle(hsvtorgb(p.dir + 60, 1, .9));
 
 		p.ray(1000, 10).turn(20);
 	}
@@ -81,7 +81,7 @@
 	p.turn(10);
 	for (var i = 0; i < 18; i++) {
 		// pen color change for a little pazazz
-		p.fillstyle(hsvtorgb(p._angle - 60, 1, .9));
+		p.fillstyle(hsvtorgb(p.dir - 60, 1, .9));
 
 		p.ray(1000, 10).turn(20);
 	}
@@ -104,7 +104,7 @@
 	p.jump(600, 250);
 	for (var i = 0; i < 18; i++) {
 		// pen color change for a little pazazz
-		p.penstyle(hsvtorgb(p._angle, 1, .9));
+		p.penstyle(hsvtorgb(p.dir, 1, .9));
 
 		// draw a spiro, then rotate a bit
 		p.penup().go(100).pendown().spiro().penup().back(100).turn(20).draw();
