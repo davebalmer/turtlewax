@@ -109,14 +109,14 @@
 */
 
 Pen = function(tag) {
-	this._angle = -90;
+	this.dir = -90;
 	this.x = 0;
 	this.y = 0;
 	
 	this.tag = document.getElementById(tag) || tag;
 	
 	this.canvas = this.tag.getContext("2d");
-	this.canvas.strokeStyle = "#000";
+	this.strokeStyle = this.canvas.strokeStyle = "#000";
 	this.lineWidth = this.canvas.lineWidth = 1;
 	this.fillStyle = this.canvas.fillStyle = "";
 
@@ -129,8 +129,8 @@ Pen = function(tag) {
 };
 Pen.prototype = {
 	turn: function(deg) {
-		this._angle += deg;
-		this._angle = this._angle % 360;
+		this.dir += deg;
+		this.dir = this.dir % 360;
 		
 		return this;
 	},
@@ -142,24 +142,24 @@ Pen.prototype = {
 	},
 	
 	set: function() {
-		this.homes.push({ x: this.x, y: this.y, angle: this._angle });
+		this.homes.push({ x: this.x, y: this.y, angle: this.dir });
 		return this;
 	},
 	
 	angle: function(a) {
-		this._angle = a - 90;
+		this.dir = a - 90;
 		return this;
 	},
 	
 	home: function() {
 		var last = this.homes.pop();
-		this._angle = last.angle;
+		this.dir = last.angle;
 
 		return this.goto(this.x, this.y);
 	},
 		
 	go: function(r) {
-		var a = this.toRad(this._angle);
+		var a = this.toRad(this.dir);
 
 		this.x += r * Math.cos(a);
 		this.y += r * Math.sin(a);
@@ -265,7 +265,7 @@ Pen.prototype = {
 	},
 	
 	polar: function(r, angle) {
-		var a = this.toRad(angle + this._angle);
+		var a = this.toRad(angle + this.dir);
 		
 		this.x = this.ox + r * Math.cos(a);
 		this.y = this.oy + r * Math.sin(a);
