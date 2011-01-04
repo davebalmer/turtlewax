@@ -48,8 +48,121 @@ Performance
 
 Zippy. Using the `pen.html`	demo, which is fairly complex, runs in ~75ms on Chrome and ~310ms on Safari (includes loading script and HTML from cache). This is on a 2nd gen Macbook Air; your mileage may vary.
 
-Roadmap
+Pen Object
+==========
+
+Canvas implementation of turtle graphics found in Logo, at least in spirit, and
+reimagined for a JavaScript world.
+
+Use
+---
+
+	var turtle = new Pen("mycanvastag");
+	turtle.goto(100, 100).text("Hello World!");
+
+Conventions
+-----------
+
+- coordinate and distance units are expressed in pixels
+- angles are expressed in degrees (mecause most humans don't grok radians)
+
+Methods
 -------
+
+- `begin()`
+
+  Starts a new path in canvas, and looks more Logo-ish along the way.
+
+- `go(distance)`
+
+  Moves forward in the current direction by `distance` pixels.
+
+- `back(distance)`
+
+  The opposite of `go`.
+
+- `turn(angle)`
+
+  Turns your current direction. To turn left (counter-clockwise), use negative
+  numbers. To turn right, well, do the opposite.
+
+- `penup()` and `pendown()`
+
+  Sets the pen down (turns on drawing) or picks it up (turns off drawing).
+
+- `up(distance)`, `down(distance)`, `left(distance)` and `right(distance)`
+
+  Makes a relative move using the coordinate system. These are convenience methods.
+
+- `goto(x, y)`
+
+  Moves the pen to the specified coordinates, respecting pen state (up or down).
+
+- `jump(x, y)`
+
+  Like `goto` except it will never draw a line to the specified point, and it
+  also quietly calls `begin`.
+
+- `draw()`
+
+  Convenience method which calls `fill()` and `stroke()`, in that order, but only
+  calls each if there is a fill style and stroke style defined, respectively.
+
+- `close()`
+
+  If you're making a closed shape and you want the corners to match up, put this
+  after you're done drawing your shape but before you call `draw()`.
+
+- `stroke()` and `fill()`
+
+  Canvas wrappers which let you manually specify which of these operations you want
+  to perform on your path (everything since the last `begin` or `jump` call).
+
+- `pensize(width)`
+
+  Sets the thickness of the line your pen draws with.
+
+- `penstyle(string)`
+
+  A canvas passthru to set the line style of your pen. For example: `penstyle("#00f")`
+  will turn your pen blue.
+
+- `fillstyle(string)`
+
+  A canvas wrapper, usually this is a solid color, e.g. `fillstyle("#ff0")` will
+  fill your shapes with eye-blinding yellow.
+
+- `font(string)`
+
+  Pass in a typical CSS font spec, e.g. `font("bold 15px Helvetica")`. The color
+  of your font will depend on your last `fillstyle` (defaults to black).
+
+- `text(string)`
+
+  Draws, well, text... at the current position. Currently does not support current
+  angle, but it should in the future.
+
+- `origin()`
+
+  Sets current location as the origin point for `polar()` moves.
+
+- `polar(distance, angle)`
+
+  Performs a `goto` using polar coordinates which are relative to the last origin set.
+  This is an interesting addition to typical turtle features, and can be a huge time
+  (math) saver.
+
+- `set()` and `home()`
+
+  Stores current position, angle and origin. A call to `home()` performs a move
+  to this position. Limited use convenience; it doesn't quite work yet and may go away.
+
+- `angle(direction)`
+
+  Resets the pen's current direction relative to the page (0 degrees is "up").
+
+Roadmap
+=======
 
 1. More canvas wrapper methods (makes chaining easier)
 2. Probably tweaking the method names and functionality (you've been warned)
