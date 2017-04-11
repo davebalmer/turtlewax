@@ -125,6 +125,8 @@ Pen = function(tag) {
 	
 	this.pen = true;
 	
+	this.homes = [];
+	
 	this.canvas.beginPath();
 };
 Pen.prototype = {
@@ -155,7 +157,7 @@ Pen.prototype = {
 		var last = this.homes.pop();
 		this.dir = last.angle;
 
-		return this.goto(this.x, this.y);
+		return this.goto(last.x, last.y);
 	},
 		
 	go: function(r) {
